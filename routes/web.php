@@ -11,9 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/','Homecontroller@index');
+Route::get('/artikel/{id}','Homecontroller@get_by_id');
+Route::post('/berita/cari','Homecontroller@get_by_name');
+
+Route::get('/add_berita','PostingController@add_view');
+Route::get('/add_berita/{berita}','PostingController@edit_view');
+Route::post('/add_berita','PostingController@insert');
 
 Auth::routes();
 
