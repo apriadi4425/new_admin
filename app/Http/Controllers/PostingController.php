@@ -25,10 +25,10 @@ class PostingController extends Controller
             $finds = Project::where('user_id',$id)->first();
             $jumlah = $find->count();
             if($jumlah == 0){
-                $data = array('user_id'=>$id,'judul'=>'','isi'=>'','tampil'=>'','kategori_id'=>5);
+                $data = array('user_id'=>$id,'judul'=>'','isi'=>'','tampil'=>'N','kategori_id'=>5);
                 Project::create($data);
                 $content = 'add';
-                 $beritanya = '';
+                  $beritanya = '';
                  $pilih_kategori = '';
             }else{
                 
@@ -81,19 +81,45 @@ class PostingController extends Controller
 
         if ($validator->fails()) {
             return response()->json(['error'=>$validator->errors()->all()]);
-        }else{
+        }else{ 
+          $data = new Berita;
+          $data->tanggal = date('Y-m-d');
+          $data->judul = $request->input('judul_berita');
+          $data->isi = $request->input('isi');
+          $data->tampil = $request->input('tampil');
+          $data->kategori_id = $request->input('kategori_id');
+          $data->post_by = $request->input('post_by');
+          $data->headline = '';
+            $data->save();
+            $eksekusi2 = Project::where('user_id',Auth::user()->id)->delete();
+            return response()->json(['success'=>'Berhasil Disimpan.','id'=>$data->id],200);
+        }
+    }
+    public function insert2(Request $request){
+          $id = Auth::user()->id;
           $data = array(
-            'tanggal' => date('Y-m-d'),
+            'judul' => $request->input('judul_berita'),
+            'isi' => $request->input('isi'),
+            'tampil' => $request->input('tampil'),
+            'kategori_id' => $request->input('kategori_id')
+            );
+          return Project::where('user_id',$id)->update($data);
+    }
+
+    public function update(Request $request){
+          $id =  $request->input('id');
+          $data = array(
             'judul' => $request->input('judul_berita'),
             'isi' => $request->input('isi'),
             'tampil' => $request->input('tampil'),
             'kategori_id' => $request->input('kategori_id'),
-            'post_by' => $request->input('post_by'),
-            'headline' => ''
+            'post_by' => $request->input('post_by')
             );
-            $eksekusi = Berita::create($data);
-            $eksekusi2 = Project::where('user_id',Auth::user()->id)->delete();
-            return response()->json(['success'=>'Berhasil Disimpan.']);
-        }
+            Berita::where('id',$id)->update($data);
+            return response()->json(['success'=>'Berhasil Disimpan.'],200);
+    }
+    public function delete(Berita $berita){
+        $berita->delete();
+        return redirect()->back();
     }
 }

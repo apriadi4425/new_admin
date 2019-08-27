@@ -36,15 +36,18 @@
                     <div class="col-lg-12">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="alert alert-danger print-error-msg" style="display:none">
+                                <div class="alert alert-danger print-error-msg kulim" style="display:none">
                                     <ul></ul>
                                 </div>
                             </div>
                         </div>
-                        <form action="{{ URL::to('add_berita')}}" method="post" enctype="multipart/form-data">
+                        <form enctype="multipart/form-data">
                             @csrf
                         <div class="form-group">
                             <label for="judul_berita">Judul Berita</label>
+                            @if($content == 'edit')
+                                <input type="hidden" name="id" id="id" value="{{ $data->id }}">
+                            @endif
                             @if ($content == 'edit' || $content == 'get')
                                 <input type="text" class="form-control" id="judul_berita" name="judul_berita" aria-describedby="judul_berita" placeholder="Enter Judul" value="{{ $data->judul }}">
                             @else
@@ -59,14 +62,25 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                 <label for="tampil" class="mr-3">Tampilkan dihalaman Utama</label>
+                                @if($content == 'add')
+                                    <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="tampil" id="tampil" value="Y">
+                                  <label class="form-check-label" for="inlineRadio1">Ya</label>
+                                </div>
                                 <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" checked name="tampil" id="tampil" value="N">
+                                  <label class="form-check-label" for="tampil">Tidak</label>
+                                </div>
+                                @else
+                                    <div class="form-check form-check-inline">
                                   <input class="form-check-input" type="radio" @if($data->tampil == 'Y') checked @endif name="tampil" id="tampil" value="Y">
                                   <label class="form-check-label" for="inlineRadio1">Ya</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input class="form-check-input" type="radio" @if($data->tampil == 'N') checked @endif name="tampil" id="tampil" value="N">
+                                  <input class="form-check-input" type="radio" @if($data->tampil == 'N' || $data->tampil == '') checked @endif name="tampil" id="tampil" value="N">
                                   <label class="form-check-label" for="tampil">Tidak</label>
                                 </div>
+                                @endif
                                 </div>
                             </div>
                         </div>
@@ -78,7 +92,7 @@
                                      @if ($content == 'edit' || $content == 'get')
                                          <option value="{{ $kategori_pilih->kategori_id }}">{{ $kategori_pilih->kategori_nama }}</option>
                                      @else
-                                         <option value="0">Pilih Kategori Berita</option>
+                                         <option>Pilih Kategori Berita</option>
                                      @endif
                                  
                                      @foreach($kategori_lists as $kategori)
@@ -100,7 +114,12 @@
                         <br>
                         <div class="row">
                             <div class="col-md-12">
-                                <button id="save_artikel" class="btn btn-success">Save</button>
+                               @if($content == 'edit')
+                                    <button id="save_edit" class="btn btn-success">Save Berita</button>
+                               @else
+                                    <button id="save_artikel" class="btn btn-success">Save</button>
+                                    <button id="save_close" class="btn btn-info">Save & Close</button>
+                               @endif
                             </div>
                         </div>
                     </form>
@@ -140,6 +159,31 @@
                 imageEditButtons: ['imageSize', 'imageStyle','imageAlign', 'imageRemove', '|', 'imageLink', 'linkOpen', 'linkEdit', 'linkRemove', '-', 'imageAlt']
 
             })
+
+            @if($content == 'add' || $content == 'get')
+                autosave();
+                function autosave(){
+                var judul_berita = $("#judul_berita").val();
+                var isi = $("#isi").val();
+                var tampil = $("input[name='tampil']:checked").val();
+                var kategori_id = $("#kategori_id").val();
+                $.ajax({
+                url: base_url+'/autosave/',
+                headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                      },
+                type: 'POST',
+                dataType: 'JSON',
+                data: {judul_berita:judul_berita, isi:isi, tampil:tampil, kategori_id:kategori_id},
+                success: function(data){},
+                complete: function() {
+// Schedule the next request when the current one's complete
+                    setTimeout(autosave, 5000); // The interval set to 5 seconds
+                }
+            });
+
+        };
+            @endif
         });
     </script>
 @endsection

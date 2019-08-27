@@ -28,7 +28,6 @@
                         <div class="form-group">
                             <label for="exampleFormControlSelect1">Pilih Kategori</label>
                             <select class="form-control" id="kategori" name="kategori">
-
                                 @if ($kategori == 'Cari')
                                     <option value="0">Pilih Kategori</option>
                                 @else
@@ -95,7 +94,7 @@
                                                 <td>{{ $berita->post_by }} <br></td>
                                                 <td>
                                                     <a href="{{ URL::to('add_berita/'.$berita->id) }}" class="btn btn-sm btn-outline-info mr-3"><i class="far fa-edit"></i></a>
-                                                    <button class="btn btn-sm btn-outline-danger"><i class="far fa-trash-alt"></i></button>
+                                                    <a href="{{ URL::to('hapus/'.$berita->id) }}" class="btn btn-sm btn-outline-danger"><i class="far fa-trash-alt"></i></button>
                                                 </td>
                                             </tr>
 

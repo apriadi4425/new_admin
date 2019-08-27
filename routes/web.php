@@ -18,6 +18,9 @@ Route::post('/berita/cari','Homecontroller@get_by_name');
 Route::get('/add_berita','PostingController@add_view');
 Route::get('/add_berita/{berita}','PostingController@edit_view');
 Route::post('/add_berita','PostingController@insert');
+Route::post('/autosave','PostingController@insert2');
+Route::put('/add_berita','PostingController@update');
+Route::get('/hapus/{berita}','PostingController@delete');
 
 Auth::routes();
 
