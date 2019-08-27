@@ -46,8 +46,8 @@
                     </ul>
 
                 </li>
-                <li class="nav-item has-treeview  @if($title == 'Tambah Berita') menu-open @endif">
-                    <a href="#" class="nav-link  @if($title == 'Tambah Berita') active @endif">
+                <li class="nav-item has-treeview  @if($title == 'Tambah Berita' || $title == 'Konfigurasi Menu') menu-open @endif">
+                    <a href="#" class="nav-link  @if($title == 'Tambah Berita' || $title == 'Konfigurasi Menu') active @endif">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Master Data
@@ -62,9 +62,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                           <a href="@if($title != 'Konfigurasi Menu') {{ URL::to('menu') }} @else # @endif" class="nav-link  @if($title == 'Konfigurasi Menu') active @endif">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Inactive Page</p>
+                                <p>Konfigurasi Menu</p>
                             </a>
                         </li>
                     </ul>

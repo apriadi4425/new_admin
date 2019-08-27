@@ -22,6 +22,8 @@ Route::post('/autosave','PostingController@insert2');
 Route::put('/add_berita','PostingController@update');
 Route::get('/hapus/{berita}','PostingController@delete');
 
+Route::get('/menu','MenuController@index');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
